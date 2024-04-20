@@ -1,3 +1,7 @@
-#A simple backend project using NestJS
+# A SIMPLE BACKEND FOR BLOG PROJECT
 
-npm run start and enjoy uwu
+- Implement by NestJS + MongoDB
+- npm run start
+- Enjoyyyy ^^
+
+![alt]([http://~](https://i.pinimg.com/736x/44/15/08/441508f9bf4097c5728e471d9649b1a8.jpg))
