@@ -5,6 +5,7 @@ import { PostDocument } from './entities/post.entity';
 import PostResponseDTO from './dto/post.response.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
+import { AuthorDocument } from 'src/authors/entities/author.entity';
 
 @Injectable()
 export class PostsService {
@@ -12,6 +13,7 @@ export class PostsService {
 
   constructor(
     @InjectModel('Post') private postModel: Model<PostDocument>,
+    @InjectModel('Author') private authorModel: Model<AuthorDocument>,
   ) {}
 
   async AddNew(createPostDto: CreatePostDto): Promise<PostResponseDTO> {
@@ -56,6 +58,28 @@ export class PostsService {
     } catch (error) {
       throw new HttpException(
         'Error deleting the post',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  async findPostsAndAuthor(authorName: string): Promise<Array<PostResponseDTO>> {
+    try {
+      let query = this.postModel.find();
+      if (authorName) {
+        const authors = await this.authorModel
+          .find()
+          .where('realname')
+          .regex(new RegExp(authorName, 'i'))
+          .select('id')
+          .exec();
+        query = query.where('author').in(authors.map((author) => author._id));
+      }
+      const posts = await query.populate('author').sort('-creationDate').exec();
+      return posts.map(PostResponseDTO.from);
+    } catch (error) {
+      throw new HttpException(
+        'Error fetching posts and author',
         HttpStatus.BAD_REQUEST,
       );
     }

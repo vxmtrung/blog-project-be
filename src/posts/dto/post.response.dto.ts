@@ -7,6 +7,7 @@ export default class PostResponseDTO {
         public title: string,
         public body: string,
         public creationDate: string,
+        public author: any
     ) {}
     
     static from = ({
@@ -14,11 +15,13 @@ export default class PostResponseDTO {
         title,
         body,
         creationDate,
+        author
     }: PostDocument): PostResponseDTO => 
         new PostResponseDTO(
             _id.toHexString(),
             title,
             body,
-            creationDate
+            creationDate,
+            author
         );
 }

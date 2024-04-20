@@ -3,6 +3,7 @@ import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import PostResponseDTO from './dto/post.response.dto';
+import { Query } from '@nestjs/common';
 
 @Controller('posts')
 export class PostsController {
@@ -26,6 +27,13 @@ export class PostsController {
   @Delete('/:id')
   async deletePost(@Param('id') id: string): Promise<any> {
     return this.postsService.delete(id);
+  }
+
+  @Get()
+  findAll(
+    @Query('authorName') authorName: string,
+  ): Promise<Array<PostResponseDTO>> {
+    return this.postsService.findPostsAndAuthor(authorName);
   }
 
 }
